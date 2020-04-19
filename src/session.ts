@@ -25,7 +25,7 @@ export class Session {
   private activeDuration: number | string;
   private expires: Date;
 
-  constructor(private req: Request, private res: Response, private cookies: Cookies, private opts: Opts) {
+  constructor(req: Request, res: Response, private cookies: Cookies, private opts: Opts) {
     if (opts.cookie.ephemeral && opts.cookie.maxAge) {
       throw new Error('you cannot have an ephemeral cookie with a maxAge.');
     }
