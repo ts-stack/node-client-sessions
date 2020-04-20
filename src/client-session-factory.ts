@@ -4,7 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import Cookies = require('cookies');
+import { Cookies } from '@ts-stack/cookies';
 import { IncomingMessage, ServerResponse } from 'http';
 
 import { Opts, ObjectAny } from './types';
@@ -69,7 +69,8 @@ export function clientSessionFactory<T extends ObjectAny = ObjectAny>(opts: Opts
 
   const propertyName = opts.requestKey || opts.cookieName;
 
-  return function clientSession(req: IncomingMessage, res: ServerResponse, next: (...arg: any) => {}) {
+  return function clientSession(req: IncomingMessage, res: ServerResponse, next?: (...arg: any) => void) {
+    next = next || ((...arg: any) => {});
     if (propertyName in req) {
       return next(); // self aware
     }

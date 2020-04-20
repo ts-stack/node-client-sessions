@@ -4,8 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import Cookies = require('cookies');
-import { IncomingMessage, ServerResponse } from 'http';
+import { Cookies, NodeRequest, NodeResponse } from '@ts-stack/cookies';
 
 import { Opts, ObjectAny } from './types';
 import { encode, decode } from './util';
@@ -25,7 +24,7 @@ export class Session<T extends ObjectAny = ObjectAny> {
   private activeDuration: number | string;
   private expires: Date;
 
-  constructor(req: IncomingMessage, res: ServerResponse, private cookies: Cookies, private opts: Opts) {
+  constructor(req: NodeRequest, res: NodeResponse, private cookies: Cookies, private opts: Opts) {
     if (opts.cookie.ephemeral && opts.cookie.maxAge) {
       throw new Error('you cannot have an ephemeral cookie with a maxAge.');
     }
@@ -50,7 +49,7 @@ export class Session<T extends ObjectAny = ObjectAny> {
 
     // here, we check that the security bits are set correctly
     const secure =
-      (res.socket && (res.socket as any).encrypted) || (req.connection && (req.connection as any).proxySecure);
+      (res.socket && (res.socket as any).encrypted) || ((req as any).connection && (req as any).connection.proxySecure);
     if (opts.cookie.secure && !secure) {
       throw new Error(
         'you cannot have a secure cookie unless the socket is ' +
