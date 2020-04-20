@@ -7,7 +7,7 @@
 import Cookies = require('cookies');
 import { IncomingMessage, ServerResponse } from 'http';
 
-import { Opts } from './types';
+import { Opts, ObjectAny } from './types';
 import { encode, decode } from './util';
 
 /**
@@ -15,8 +15,8 @@ import { encode, decode } from './util';
  *
  * this should be implemented with proxies at some point
  */
-export class Session {
-  private _content: any;
+export class Session<T extends ObjectAny = ObjectAny> {
+  private _content: T;
   private json: string;
   private loaded: boolean;
   private dirty: boolean;
@@ -30,7 +30,7 @@ export class Session {
       throw new Error('you cannot have an ephemeral cookie with a maxAge.');
     }
 
-    this.content = {};
+    this.content = {} as T;
     this.json = JSON.stringify(this._content);
     this.loaded = false;
     this.dirty = false;
@@ -66,7 +66,7 @@ export class Session {
     return this._content;
   }
 
-  set content(value) {
+  set content(value: T) {
     Object.defineProperty(value, 'reset', {
       enumerable: false,
       value: this.reset.bind(this),
@@ -144,7 +144,7 @@ export class Session {
     return encode(this.opts, this._content, this.duration, this.createdAt);
   }
 
-  unbox(content: any) {
+  unbox(content: string) {
     this.clearContent();
 
     const unboxed = decode(this.opts, content);
@@ -152,12 +152,7 @@ export class Session {
       return;
     }
 
-    const self = this;
-
-    Object.keys(unboxed.content).forEach((k) => {
-      self._content[k] = unboxed.content[k];
-    });
-
+    Object.assign(this._content, unboxed.content);
     this.createdAt = unboxed.createdAt;
     this.duration = unboxed.duration;
     this.updateDefaultExpires();

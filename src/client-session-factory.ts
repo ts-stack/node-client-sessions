@@ -7,7 +7,7 @@
 import Cookies = require('cookies');
 import { IncomingMessage, ServerResponse } from 'http';
 
-import { Opts } from './types';
+import { Opts, ObjectAny } from './types';
 import {
   DEFAULT_ENCRYPTION_ALGO,
   ENCRYPTION_ALGORITHMS,
@@ -19,7 +19,10 @@ import {
 } from './util';
 import { Session } from './session';
 
-export function clientSessionFactory(opts: Opts) {
+/**
+ * The generic type used to specify session content type.
+ */
+export function clientSessionFactory<T extends ObjectAny = ObjectAny>(opts: Opts) {
   if (!opts) {
     throw new Error('no options provided, some are required');
   }
@@ -72,7 +75,7 @@ export function clientSessionFactory(opts: Opts) {
     }
 
     const cookies = new Cookies(req, res);
-    let rawSession: Session;
+    let rawSession: Session<T>;
     try {
       rawSession = new Session(req, res, cookies, opts);
     } catch (x) {
@@ -85,7 +88,7 @@ export function clientSessionFactory(opts: Opts) {
       get: function getSession() {
         return rawSession.content;
       },
-      set: function setSession(value) {
+      set: function setSession(value: T) {
         if (isObject(value)) {
           rawSession.content = value;
         } else {
