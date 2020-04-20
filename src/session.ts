@@ -5,7 +5,7 @@
  */
 
 import Cookies = require('cookies');
-import { Request, Response } from 'express';
+import { IncomingMessage, ServerResponse } from 'http';
 
 import { Opts } from './types';
 import { encode, decode } from './util';
@@ -25,7 +25,7 @@ export class Session {
   private activeDuration: number | string;
   private expires: Date;
 
-  constructor(req: Request, res: Response, private cookies: Cookies, private opts: Opts) {
+  constructor(req: IncomingMessage, res: ServerResponse, private cookies: Cookies, private opts: Opts) {
     if (opts.cookie.ephemeral && opts.cookie.maxAge) {
       throw new Error('you cannot have an ephemeral cookie with a maxAge.');
     }
@@ -100,7 +100,7 @@ export class Session {
 
   clearContent(keysToPreserve?: string) {
     const self = this;
-    Object.keys(this._content).forEach(function (k) {
+    Object.keys(this._content).forEach((k) => {
       // exclude this key if it's meant to be preserved
       if (keysToPreserve && keysToPreserve.indexOf(k) > -1) {
         return;
@@ -154,7 +154,7 @@ export class Session {
 
     const self = this;
 
-    Object.keys(unboxed.content).forEach(function (k) {
+    Object.keys(unboxed.content).forEach((k) => {
       self._content[k] = unboxed.content[k];
     });
 

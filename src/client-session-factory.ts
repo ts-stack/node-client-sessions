@@ -5,7 +5,7 @@
  */
 
 import Cookies = require('cookies');
-import { Request, Response, NextFunction } from 'express';
+import { IncomingMessage, ServerResponse } from 'http';
 
 import { Opts } from './types';
 import {
@@ -67,7 +67,7 @@ export function clientSessionFactory(opts: Opts) {
 
   const propertyName = opts.requestKey || opts.cookieName;
 
-  return function clientSession(req: Request, res: Response, next: NextFunction) {
+  return function clientSession(req: IncomingMessage, res: ServerResponse, next: (...arg: any) => {}) {
     if (propertyName in req) {
       return next(); // self aware
     }
@@ -78,9 +78,7 @@ export function clientSessionFactory(opts: Opts) {
       rawSession = new Session(req, res, cookies, opts);
     } catch (x) {
       // this happens only if there's a big problem
-      process.nextTick(function () {
-        next(new Error('client-sessions error: ' + x.toString()));
-      });
+      process.nextTick(() => next(new Error('client-sessions error: ' + x.toString())));
       return;
     }
 
@@ -98,9 +96,9 @@ export function clientSessionFactory(opts: Opts) {
     });
 
     const writeHead = res.writeHead;
-    res.writeHead = function () {
+    res.writeHead = (...args: any[]) => {
       rawSession.updateCookie();
-      return writeHead.apply(res, arguments);
+      return writeHead.apply(res, args);
     };
 
     next();
