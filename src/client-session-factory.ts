@@ -9,7 +9,6 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import { Opts } from './types';
 import {
-  ACTIVE_DURATION,
   DEFAULT_ENCRYPTION_ALGO,
   ENCRYPTION_ALGORITHMS,
   DEFAULT_SIGNATURE_ALGO,
@@ -32,7 +31,7 @@ export function clientSessionFactory(opts: Opts) {
   // defaults
   opts.cookieName = opts.cookieName || 'session_state';
   opts.duration = opts.duration || 24 * 60 * 60 * 1000;
-  opts.activeDuration = 'activeDuration' in opts ? opts.activeDuration : ACTIVE_DURATION;
+  opts.activeDuration = opts.activeDuration !== undefined ? opts.activeDuration : 1000 * 60 * 5;
 
   let encAlg = opts.encryptionAlgorithm || DEFAULT_ENCRYPTION_ALGO;
   encAlg = encAlg.toLowerCase();

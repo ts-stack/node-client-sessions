@@ -8,7 +8,6 @@ import * as crypto from 'crypto';
 import { Opts, ObjectAny } from './types';
 
 const COOKIE_NAME_SEP = '=';
-export const ACTIVE_DURATION = 1000 * 60 * 5;
 
 const KDF_ENC = 'cookiesession-encryption';
 const KDF_MAC = 'cookiesession-signature';
