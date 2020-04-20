@@ -10,7 +10,7 @@ export interface Opts {
    */
   cookieName?: string;
   /**
-   * Should be a large unguessable string.
+   * Should be a large unguessable string or Buffer.
    */
   secret?: string;
   /**
@@ -24,8 +24,35 @@ export interface Opts {
   activeDuration?: string | number;
   encryptionKey?: Buffer;
   signatureKey?: Buffer | string;
+  /**
+   * Supported HMAC `signatureAlgorithm`s (and key length requirements):
+   * 
+| HMAC           | Minimum Key Length | Maximum Key Length |
+| -------------- | ------------------ | ------------------ |
+| sha256         | 32 bytes           | 64 bytes           |
+| sha256-drop128 | 32 bytes           | 64 bytes           |
+| sha384         | 48 bytes           | 128 bytes          |
+| sha384-drop192 | 48 bytes           | 128 bytes          |
+| sha512         | 64 bytes           | 128 bytes          |
+| sha512-drop256 | 64 bytes           | 128 bytes          |
+   * 
+   */
   signatureAlgorithm?: string;
+  /**
+   * 
+   * Supported CBC-mode `encryptionAlgorithm`s (and key length requirements):
+
+| Cipher | Key length |
+| ------ | ---------- |
+| aes128 | 16 bytes   |
+| aes192 | 24 bytes   |
+| aes256 | 32 bytes   |
+   * 
+   */
   encryptionAlgorithm?: string;
+  /**
+   * Overrides cookieName for the key name added to the request object.
+   */
   requestKey?: string;
   cookie?: Cookie;
 }
