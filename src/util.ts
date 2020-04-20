@@ -99,7 +99,7 @@ export function setupKeys(opts: Opts) {
   }
 }
 
-export function keyConstraints(opts: Opts) {
+export function checkConstraints(opts: Opts) {
   if (!Buffer.isBuffer(opts.encryptionKey)) {
     throw new Error('encryptionKey must be a Buffer');
   }

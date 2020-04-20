@@ -14,7 +14,7 @@ import {
   DEFAULT_SIGNATURE_ALGO,
   SIGNATURE_ALGORITHMS,
   setupKeys,
-  keyConstraints,
+  checkConstraints,
   isObject,
 } from './util';
 import { Session } from './session';
@@ -62,7 +62,7 @@ export function clientSessionFactory(opts: Opts) {
      */
 
   setupKeys(opts);
-  keyConstraints(opts);
+  checkConstraints(opts);
 
   const propertyName = opts.requestKey || opts.cookieName;
 
