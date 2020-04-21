@@ -1,6 +1,6 @@
 {
   "name": "@ts-stack/client-sessions",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "secure sessions stored in cookies",
   "main": "dist/index",
   "types": "dist/index",

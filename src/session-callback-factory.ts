@@ -6,7 +6,7 @@
 
 import { Cookies, NodeRequest, NodeResponse } from '@ts-stack/cookies';
 
-import { SessionOptions } from './types';
+import { SessionOptions, SessionCallback } from './types';
 import {
   DEFAULT_ENCRYPTION_ALGO,
   ENCRYPTION_ALGORITHMS,
@@ -21,7 +21,7 @@ import { Session } from './session';
 /**
  * The generic type used to specify session content type.
  */
-export function sessionCallbackFactory(opts: SessionOptions) {
+export function sessionCallbackFactory(opts: SessionOptions): SessionCallback {
   if (!opts) {
     throw new Error('no options provided, some are required');
   }
