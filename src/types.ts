@@ -1,3 +1,4 @@
+import { CookieOptions } from '@ts-stack/cookies';
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -54,10 +55,10 @@ export interface Opts {
    * Overrides cookieName for the key name added to the request object.
    */
   requestKey?: string;
-  cookie?: Cookie;
+  cookie?: CookieOpts;
 }
 
-export interface Cookie {
+export interface CookieOpts extends CookieOptions {
   /**
    * Cookie will only be sent to requests under '/api'.
    */
@@ -79,7 +80,6 @@ export interface Cookie {
    * instead if you handle SSL not in your node process.
    */
   secure?: boolean;
-  expires?: Date;
 }
 
 export interface ObjectAny {

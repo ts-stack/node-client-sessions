@@ -7,14 +7,18 @@ client-sessions is connect middleware that implements sessions in encrypted tamp
 **NOTE:** It is not recommended using both this middleware and connect's built-in session middleware.
 
 ## Installation
-`npm install client-sessions`
+
+```bash
+npm install @ts-stack/client-sessions
+```
 
 ## Usage
 
 Basic usage:
 
-```js
-var sessions = require("client-sessions");
+```ts
+import { sessions } from '@ts-stack/client-sessions';
+
 app.use(sessions({
   cookieName: 'mySession', // cookie name dictates the key name added to the request object
   secret: 'blargadeeblargblarg', // should be a large unguessable string
@@ -22,7 +26,7 @@ app.use(sessions({
   activeDuration: 1000 * 60 * 5 // if expiresIn < activeDuration, the session will be extended by activeDuration milliseconds
 }));
 
-app.use(function(req, res, next) {
+app.use((req, res, next) => {
   if (req.mySession.seenyou) {
     res.setHeader('X-Seen-You', 'true');
   } else {
@@ -36,7 +40,7 @@ app.use(function(req, res, next) {
 
 You can control more specific cookie behavior during setup:
 
-```js
+```ts
 app.use(sessions({
   cookieName: 'mySession', // cookie name dictates the key name added to the request object
   secret: 'blargadeeblargblarg', // should be a large unguessable string
@@ -53,7 +57,7 @@ app.use(sessions({
 
 You can have multiple cookies:
 
-```js
+```ts
 // a 1 week session
 app.use(sessions({
   cookieName: 'shopping_cart',
@@ -73,8 +77,9 @@ In this example, there's a 2 hour authentication session, but shopping carts per
 
 Finally, you can use requestKey to force the name where information can be accessed on the request object.
 
-```js
-var sessions = require("client-sessions");
+```ts
+import { sessions } from '@ts-stack/client-sessions';
+
 app.use(sessions({
   cookieName: 'mySession',
   requestKey: 'forcedSessionKey', // requestKey overrides cookieName for the key name added to the request object.
@@ -101,8 +106,8 @@ MAC.
 The key-derivation function, in pseudocode:
 
 ```text
-  encKey := HMAC-SHA-256(secret, 'cookiesession-encryption');
-  sigKey := HMAC-SHA-256(secret, 'cookiesession-signature');
+encKey := HMAC-SHA-256(secret, 'cookiesession-encryption');
+sigKey := HMAC-SHA-256(secret, 'cookiesession-signature');
 ```
 
 The **AES-256-CBC** cipher is used to encrypt the session contents, with an
@@ -115,16 +120,16 @@ In pseudocode, the encryption looks like the following, with `||` denoting
 concatenation. The `createdAt` and `duration` parameters are decimal strings.
 
 ```text
-  sessionText := cookieName || '=' || sessionJson
-  iv := secureRandom(16 bytes)
-  ciphertext := AES-256-CBC(encKey, iv, sessionText)
-  payload := iv || '.' || ciphertext || '.' || createdAt || '.' || duration
-  hmac := HMAC-SHA-256(sigKey, payload)
-  cookie := base64url(iv) || '.' ||
-    base64url(ciphertext) || '.' ||
-    createdAt || '.' ||
-    duration || '.' ||
-    base64url(hmac)
+sessionText := cookieName || '=' || sessionJson
+iv := secureRandom(16 bytes)
+ciphertext := AES-256-CBC(encKey, iv, sessionText)
+payload := iv || '.' || ciphertext || '.' || createdAt || '.' || duration
+hmac := HMAC-SHA-256(sigKey, payload)
+cookie := base64url(iv) || '.' ||
+  base64url(ciphertext) || '.' ||
+  createdAt || '.' ||
+  duration || '.' ||
+  base64url(hmac)
 ```
 
 For decryption, a constant-time equality operation is used to verify the HMAC
@@ -149,7 +154,7 @@ Cookies invalid!**
 
 To configure independent encryption and signature (HMAC) keys:
 
-```js
+```ts
 app.use(sessions({
   encryptionKey: loadFromKeyStore('session-encryption-key'),
   signatureKey: loadFromKeyStore('session-signature-key'),
@@ -161,7 +166,7 @@ app.use(sessions({
 
 To specify custom algorithms and keys:
 
-```js
+```ts
 app.use(sessions({
   // use WEAKER-than-default encryption:
   encryptionAlgorithm: 'aes128',
@@ -215,7 +220,7 @@ One can easily generate both AES and HMAC-SHA2 keys via command line: `openssl
 rand -base64 32` for a 32-byte (256-bit) key.  It's easy to then parse that
 output into a `Buffer`:
 
-```js
+```ts
 function loadKeyFromStore(name) {
   var text = myConfig.keys[name];
   return Buffer.from(text, 'base64');

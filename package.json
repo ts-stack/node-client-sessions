@@ -1,21 +1,21 @@
 {
-  "name": "client-sessions",
-  "version": "0.8.0",
+  "name": "@ts-stack/client-sessions",
+  "version": "1.0.0",
   "description": "secure sessions stored in cookies",
   "main": "dist/index",
   "types": "dist/index",
   "repository": {
     "type": "git",
-    "url": "https://github.com/mozilla/node-client-sessions"
+    "url": "https://github.com/ts-stack/node-client-sessions"
   },
   "scripts": {
     "test": "rimraf dist/* && tsc && vows --spec"
   },
   "dependencies": {
-    "@ts-stack/cookies": "^1.0.1",
-    "@types/keygrip": "^1.0.2"
+    "@ts-stack/cookies": "^1.0.1"
   },
   "devDependencies": {
+    "@types/keygrip": "^1.0.2",
     "@types/express": "^4.17.6",
     "express": "4.17.1",
     "prettier": "^2.0.4",
@@ -35,5 +35,5 @@
     "node": ">= 0.8.0"
   },
   "license": "MPL-2.0",
-  "bugs": "https://github.com/mozilla/node-client-sessions/issues"
+  "bugs": "https://github.com/ts-stack/node-client-sessions/issues"
 }

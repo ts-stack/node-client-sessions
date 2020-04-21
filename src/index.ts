@@ -1,3 +1,3 @@
-export { clientSessionFactory as sessions } from './client-session-factory';
+export { sessions } from './sessions';
 export { encode, decode, computeHmac } from './util';
-export { Opts as ClientSessionOptions, Cookie } from './types';
+export { Opts as ClientSessionOpts, CookieOpts } from './types';

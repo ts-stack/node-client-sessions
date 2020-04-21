@@ -4,8 +4,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-import { Cookies } from '@ts-stack/cookies';
-import { IncomingMessage, ServerResponse } from 'http';
+import { Cookies, NodeRequest, NodeResponse } from '@ts-stack/cookies';
 
 import { Opts, ObjectAny } from './types';
 import {
@@ -22,7 +21,7 @@ import { Session } from './session';
 /**
  * The generic type used to specify session content type.
  */
-export function clientSessionFactory<T extends ObjectAny = ObjectAny>(opts: Opts) {
+export function sessions<T extends ObjectAny = ObjectAny>(opts: Opts) {
   if (!opts) {
     throw new Error('no options provided, some are required');
   }
@@ -69,7 +68,7 @@ export function clientSessionFactory<T extends ObjectAny = ObjectAny>(opts: Opts
 
   const propertyName = opts.requestKey || opts.cookieName;
 
-  return function clientSession(req: IncomingMessage, res: ServerResponse, next?: (...arg: any) => void) {
+  return function clientSession(req: NodeRequest, res: NodeResponse, next?: (...arg: any) => void) {
     next = next || ((...arg: any) => {});
     if (propertyName in req) {
       return next(); // self aware

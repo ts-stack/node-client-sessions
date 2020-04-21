@@ -1,0 +1,7 @@
+.*
+*.log
+test
+src
+*.tgz
+tslint.json
+tsconfig.json
