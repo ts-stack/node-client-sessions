@@ -17,9 +17,9 @@ npm install @ts-stack/client-sessions
 Basic usage:
 
 ```ts
-import { sessions } from '@ts-stack/client-sessions';
+import { sessionCallbackFactory } from '@ts-stack/client-sessions';
 
-app.use(sessions({
+app.use(sessionCallbackFactory({
   cookieName: 'mySession', // cookie name dictates the key name added to the request object
   secret: 'blargadeeblargblarg', // should be a large unguessable string
   duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 You can control more specific cookie behavior during setup:
 
 ```ts
-app.use(sessions({
+app.use(sessionCallbackFactory({
   cookieName: 'mySession', // cookie name dictates the key name added to the request object
   secret: 'blargadeeblargblarg', // should be a large unguessable string
   duration: 24 * 60 * 60 * 1000, // how long the session will stay valid in ms
@@ -59,14 +59,14 @@ You can have multiple cookies:
 
 ```ts
 // a 1 week session
-app.use(sessions({
+app.use(sessionCallbackFactory({
   cookieName: 'shopping_cart',
   secret: 'first secret',
   duration: 7 * 24 * 60 * 60 * 1000
 }));
 
 // a 2 hour encrypted session
-app.use(sessions({
+app.use(sessionCallbackFactory({
   cookieName: 'authenticated',
   secret: 'first secret',
   duration: 2 * 60 * 60 * 1000
@@ -78,9 +78,9 @@ In this example, there's a 2 hour authentication session, but shopping carts per
 Finally, you can use requestKey to force the name where information can be accessed on the request object.
 
 ```ts
-import { sessions } from '@ts-stack/client-sessions';
+import { sessionCallbackFactory } from '@ts-stack/client-sessions';
 
-app.use(sessions({
+app.use(sessionCallbackFactory({
   cookieName: 'mySession',
   requestKey: 'forcedSessionKey', // requestKey overrides cookieName for the key name added to the request object.
   secret: 'blargadeeblargblarg', // should be a large unguessable string or Buffer
@@ -155,7 +155,7 @@ Cookies invalid!**
 To configure independent encryption and signature (HMAC) keys:
 
 ```ts
-app.use(sessions({
+app.use(sessionCallbackFactory({
   encryptionKey: loadFromKeyStore('session-encryption-key'),
   signatureKey: loadFromKeyStore('session-signature-key'),
   // ... other options discussed above ...
@@ -167,7 +167,7 @@ app.use(sessions({
 To specify custom algorithms and keys:
 
 ```ts
-app.use(sessions({
+app.use(sessionCallbackFactory({
   // use WEAKER-than-default encryption:
   encryptionAlgorithm: 'aes128',
   encryptionKey: loadFromKeyStore('session-encryption-key'),

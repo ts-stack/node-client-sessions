@@ -5,7 +5,7 @@
  */
 
 import * as crypto from 'crypto';
-import { Opts, ObjectAny } from './types';
+import { SessionOptions, ObjectAny } from './types';
 
 const COOKIE_NAME_SEP = '=';
 
@@ -80,7 +80,7 @@ function deriveKey(master: string, type: string) {
   return forceBuffer(hmac.digest());
 }
 
-export function setupKeys(opts: Opts) {
+export function setupKeys(opts: SessionOptions) {
   // derive two keys, one for signing one for encrypting, from the secret.
   if (!opts.encryptionKey) {
     opts.encryptionKey = deriveKey(opts.secret, KDF_ENC);
@@ -99,7 +99,7 @@ export function setupKeys(opts: Opts) {
   }
 }
 
-export function checkConstraints(opts: Opts) {
+export function checkConstraints(opts: SessionOptions) {
   if (!Buffer.isBuffer(opts.encryptionKey)) {
     throw new Error('encryptionKey must be a Buffer');
   }
@@ -128,7 +128,7 @@ export function checkConstraints(opts: Opts) {
   }
 }
 
-export function encode(opts: Opts, content: any, duration: number, createdAt: number) {
+export function encode(opts: SessionOptions, content: any, duration: number, createdAt: number) {
   // format will be:
   // iv.ciphertext.createdAt.duration.hmac
 
@@ -171,7 +171,7 @@ export function encode(opts: Opts, content: any, duration: number, createdAt: nu
   return result;
 }
 
-export function decode(opts: Opts, content: any) {
+export function decode(opts: SessionOptions, content: any) {
   if (!opts.cookieName) {
     throw new Error('cookieName option required');
   }
@@ -258,7 +258,7 @@ export function decode(opts: Opts, content: any) {
   return result;
 }
 
-export function computeHmac(opts: Opts, iv: Buffer, ciphertext: Buffer, duration: number, createdAt: number) {
+export function computeHmac(opts: SessionOptions, iv: Buffer, ciphertext: Buffer, duration: number, createdAt: number) {
   const hmacAlg = hmacInit(opts.signatureAlgorithm, opts.signatureKey as string);
 
   hmacAlg.update(iv);

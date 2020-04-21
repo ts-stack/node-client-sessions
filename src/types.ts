@@ -1,11 +1,12 @@
-import { CookieOptions } from '@ts-stack/cookies';
+import { CookieOptions, NodeRequest, NodeResponse } from '@ts-stack/cookies';
+
 /*
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-export interface Opts {
+export interface SessionOptions {
   /**
    * Cookie name dictates the key name added to the request object.
    */
@@ -55,10 +56,10 @@ export interface Opts {
    * Overrides cookieName for the key name added to the request object.
    */
   requestKey?: string;
-  cookie?: CookieOpts;
+  cookie?: SessionCookieOptions;
 }
 
-export interface CookieOpts extends CookieOptions {
+export interface SessionCookieOptions extends CookieOptions {
   /**
    * Cookie will only be sent to requests under '/api'.
    */
@@ -85,3 +86,5 @@ export interface CookieOpts extends CookieOptions {
 export interface ObjectAny {
   [key: string]: any;
 }
+
+export type SessionCallback = (req: NodeRequest, res: NodeResponse, next?: (...arg: any) => void) => void;

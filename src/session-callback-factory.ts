@@ -6,7 +6,7 @@
 
 import { Cookies, NodeRequest, NodeResponse } from '@ts-stack/cookies';
 
-import { Opts, ObjectAny } from './types';
+import { SessionOptions } from './types';
 import {
   DEFAULT_ENCRYPTION_ALGO,
   ENCRYPTION_ALGORITHMS,
@@ -21,7 +21,7 @@ import { Session } from './session';
 /**
  * The generic type used to specify session content type.
  */
-export function sessions<T extends ObjectAny = ObjectAny>(opts: Opts) {
+export function sessionCallbackFactory(opts: SessionOptions) {
   if (!opts) {
     throw new Error('no options provided, some are required');
   }
@@ -75,7 +75,7 @@ export function sessions<T extends ObjectAny = ObjectAny>(opts: Opts) {
     }
 
     const cookies = new Cookies(req, res);
-    let rawSession: Session<T>;
+    let rawSession: Session;
     try {
       rawSession = new Session(req, res, cookies, opts);
     } catch (x) {
@@ -88,7 +88,7 @@ export function sessions<T extends ObjectAny = ObjectAny>(opts: Opts) {
       get: function getSession() {
         return rawSession.content;
       },
-      set: function setSession(value: T) {
+      set: function setSession(value: any) {
         if (isObject(value)) {
           rawSession.content = value;
         } else {

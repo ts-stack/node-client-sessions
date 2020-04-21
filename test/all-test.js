@@ -5,7 +5,7 @@ process.env.NODE_ENV = 'test';
 
 var vows = require("vows"),
     assert = require("assert"),
-    cookieSessions = require("../dist/client-session-factory").sessions,
+    cookieSessions = require("../dist/session-callback-factory").sessionCallbackFactory,
     util = require("../dist/util"),
     express = require("express"),
     request = require("request");
