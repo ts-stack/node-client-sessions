@@ -236,7 +236,7 @@ export function decode(opts: SessionOptions, content: any) {
 
   // decrypt
   const cipher = crypto.createDecipheriv(opts.encryptionAlgorithm, opts.encryptionKey, iv);
-  let plaintext = cipher.update(ciphertext, 'binary', 'utf8');
+  let plaintext = cipher.update(ciphertext, undefined, 'utf8');
   plaintext += cipher.final('utf8');
 
   const cookieName = plaintext.substring(0, plaintext.indexOf(COOKIE_NAME_SEP));
